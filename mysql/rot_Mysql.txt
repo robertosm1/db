@@ -1,0 +1,272 @@
+An INT will always be 4 bytes no matter what length is specified.
+
+TINYINT = 1 byte (8 bit)
+SMALLINT = 2 bytes (16 bit)
+MEDIUMINT = 3 bytes (24 bit)
+INT = 4 bytes (32 bit)
+BIGINT = 8 bytes (64 bit).
+The length just specifies how many characters to pad when selecting data with the mysql command line client. 12345 stored as int(3) will still show as 12345, but if it was stored as int(10) it would still display An INT will always be 4 bytes no matter what length is specified.
+
+TINYINT = 1 byte (8 bit)
+SMALLINT = 2 bytes (16 bit)
+MEDIUMINT = 3 bytes (24 bit)
+INT = 4 bytes (32 bit)
+BIGINT = 8 bytes (64 bit).
+The length just specifies how many characters to pad when selecting data with the mysql command line client. 12345 stored as int(3) will still show as 12345, but if it was stored as int(10) it would still display as 12345, but you would have the option to pad the first five digits. For example, if you added ZEROFILL it would display as 0000012345.
+
+... and the maximum value will be 2147483647 (Signed) or 4294967295 (Unsigned)
+
+
+Storage de datatypes , vide
+C:\a_work\()Mysql\Mysql_oficial_storage_datatype.pdf
+
+--------------------datetime vs timestamp
+By default, DATETIME values range from 1000-01-01 00:00:00 to 9999-12-31 23:59:59.
+
+A DATETIME value uses 5 bytes for storage. In addition, a DATETIME value can include a trailing fractional second up to microseconds with the format YYYY-MM-DD HH:MM:SS[.fraction] e.g., 2015-12-20 10:01:00.999999. When including the fractional second precision, DATETIME values require more storage as illustrated in the following table:
+
+For example, 2015-12-20 10:01:00.999999 requires 8 bytes, 5  bytes for 2015-12-20 10:01:00 and 3 bytes for .999999 while 2015-12-20 10:01:00.9  requires only 6 bytes, 1 byte for the fractional second precision.
+
+The TIMESTAMP requires 4 bytes while DATETIME requires 5 bytes. Both TIMESTAMP and DATETIME require additional bytes for fractional seconds precision.
+
+TIMESTAMP values range from 1970-01-01 00:00:01 UTC to 2038-01-19 03:14:07 UTC. If you want to store temporal values that are beyond 2038, you should use DATETIME instead of TIMESTAMP.
+
+CREATE TABLE timestamp_n_datetime (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ts TIMESTAMP,
+    dt DATETIME
+);
+
+CREATE TABLE Table_datetime (dt DATETIME);
+
+----- valores monetários
+
+Como o dinheiro precisa de uma representação exata, não use tipos de dados que sejam apenas aproximados float. Você pode usar um tipo de dados numérico de ponto fixo para algo como
+
+decimal(15,2)
+15 é a precisão (comprimento total do valor, incluindo casas decimais)
+2 é o número de dígitos após o ponto decimal
+
+9.999,999,999,999,99
+
+porta default do MySQL 3306 TCP/IP 
+para X portal é 33060
+
+senha do Mysql user root adm note Sky5
+
+--> create database é o schema no Mysql
+In MySQL, physically, a schema is synonymous with a database. You can substitute the keyword SCHEMA instead of DATABASE in MySQL SQL syntax, for example using CREATE SCHEMA instead of CREATE DATABASE.
+
+create database [if not exists] ODS;
+-- É IGUAL A CREATE SCHEMA ods;
+
+create database [if not exists] DB_BIBLIOTECA;
+
+create database [if not exists] DB_BILBIOTECA;
+
+---- script para rodar no
+mysql -uroot -prootpassword -e "CREATE DATABASE $DB CHARACTER SET utf8 COLLATE utf8_general_ci";
+CREATE DATABASE ODS CHARACTER SET utf8mb4  COLLATE utf8mb4_general_ci ;
+
+CREATE SCHEMA TESTE CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+
+mysql -uroot -prootpassword -e "CREATE USER $USER@'127.0.0.1' IDENTIFIED BY '$PASS'";
+mysql -uroot -prootpassword -e "GRANT SELECT, INSERT, UPDATE ON $DB.* TO '$USER'@'127.0.0.1'"
+
+-- charset e collation
+-- Brasil usa-se Latin1 de characterset
+show character set;
+
+--mostrar collation para charset latin1
+show collation where charset='latin1';
+
+
+Charsets e collations no MySQL
+
+-- Ver a lista de charsets suportados pelo MySQL com a seguinte consulta:
+show character set;
+
+Collations
+Collations ("agrupamentos") para cada um desses charsets, definem as regras para comparação entre caracteres do charset. Há collations para comparar caracteres de diferentes idiomas, para ignorar (ou não) letras minúsculas e maiúculas, ou acentuação.
+
+Por exemplo, digamos que seja feita uma consulta pela palavra "teste" em uma determinada coluna de uma tabela. Se a collation dessa coluna for "latin1_general_ci", o MySQL pode retornar as palavras "TESTE", "Teste", etc., pois as letras maiúsculas não se diferem das minúsculas (daí o sufixo "ci", de "case-insensitive"). Já na collation "latin1_general_cs", apenas o valor "teste" serviria.
+
+--Para ver a lista de collations de um determinado charset, use:
+show collation where charset='latin1';
+
+Obs.: o mais abrangente collation é case insensitive que buscaria maiusculo e minusculo
+
+
+
+Unicode e UTF-8
+O conjunto de caracteres Unicode é o mais abrangente. Ele engloba milhares de caracteres conhecidos, de vários idiomas, além de símbolos, emoticons, etc. Já o UTF-8 é uma forma prática de se usar o Unicode sem usar tanto espaço de armazenamento.
+
+A tendência atualmente é usar o charset UTF-8 nos bancos de dados (especificamente o utf8mb4 no MySQL), pois serve para qualquer idioma.
+
+utf8mb4
+O UTF-8 do MySQL, por padrão, não suporta todos os caracteres possíveis do Unicode, utilizando até 3 bytes por caractere. Eles posteriormente criaram o charset utf8mb4, que pode ter até 4 bytes por caractere e é mais completo.
+
+Então a recomendação mais atual de charset e collation para campos texto é utf8mb4 e utf8mb4_general_ci, respectivamente.
+
+CREATE DATABASE ODS CHARACTER SET utf8mb4  COLLATE utf8mb4_general_ci;
+
+---- script para rodar no
+
+CREATE SCHEMA TESTE CHARACTER SET utf8mb4  COLLATE utf8mb4_general_ci;
+use TESTE;
+
+
+mysql -uroot -prootpassword -e "CREATE DATABASE $DB CHARACTER SET utf8 COLLATE utf8_general_ci";
+mysql -uroot -prootpassword -e "CREATE DATABASE ODS CHARACTER SET utf8mb4  COLLATE utf8mb4_general_ci";
+mysql -uroot -prootpassword -e "CREATE USER $USER@'127.0.0.1' IDENTIFIED BY '$PASS'";
+mysql -uroot -prootpassword -e "GRANT SELECT, INSERT, UPDATE ON $DB.* TO '$USER'@'127.0.0.1'"
+
+
+-- USE TESTE
+
+show databases
+
+
+Charsets do banco de dados, tabelas e colunas
+Cada coluna de uma mesma tabela pode ter charsets e collations diferentes. Já as tabelas e bancos de dados não têm charsets ou collations próprios, mas pode-se definir seu valor padrão ao criá-los.
+
+Por exemplo, se você, ao criar uma coluna da tabela, não especificar o charset/collation, o MySQL vai usar os da tabela. E a tabela vai adotar os do banco de dados se não indicados no "create table".
+
+Dica: para ver a codificação de uma tabela, use o comando:
+
+show create table nome_da_tabela;
+Vai aparecer algo assim (exemplo):
+
+CREATE TABLE `Usuarios` (
+  `Usuario` varchar(30) NOT NULL DEFAULT '',
+  `Senha` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`Usuario`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+Na última linha informa o conjunto de caracteres padrão da tabela.
+
+INSERT INTO Usuarios VALUES ('João Magalhães 1,00','@#$%¨sadasdÃOÇÍÀ');
+COMMIT;
+SELECT  FROM Usuarios;
+
+------------------
+
+---- script para rodar no
+
+create database ODS character set utf8mb4  collate utf8mb4_general_ci;
+create schema ODS character set utf8mb4  collate utf8mb4_general_ci;
+
+create schema TESTE character set utf8mb4  collate utf8mb4_general_ci;
+
+
+mysql -uroot -prootpassword -e "CREATE DATABASE $DB CHARACTER SET utf8 COLLATE utf8_general_ci";
+mysql -uroot -prootpassword -e "CREATE DATABASE ODS CHARACTER SET utf8mb4  COLLATE utf8mb4_general_ci";
+mysql -uroot -prootpassword -e "CREATE USER $USER@'127.0.0.1' IDENTIFIED BY '$PASS'";
+mysql -uroot -prootpassword -e "GRANT SELECT, INSERT, UPDATE ON $DB.* TO '$USER'@'127.0.0.1'"
+
+
+-- USE TESTE
+
+
+
+
+Conversão
+Veja como converter entre os vários charsets e collations no MySQ
+
+------------ performance
+
+--sessio ver quem está consumindo mais memory order by memomry desc
+SELECT * from sys.session;
+SELECT * from sys.session order by current_memory desc;
+
+
+
+-- ver lista de user para kill (v$session do mysql)
+
+-- query padrao
+select id,
+    user,
+    host,
+    db,
+    command,
+    time,
+    state,
+    info
+from information_schema.processlist;
+-- where user=<'user'>;
+
+--para matar a sessao
+kill <id>;
+kill 2;
+Select concat('KILL ',id,';') from information_schema.processlist where user='user' LIMIT 0, 1000
+
+------------
+
+storage
+
+INNODB 												vs 			ISAM
+1) Default storage após MySQL 5.5					|	1)default storage engine antes da versão 5.5
+2)ACID compliant (atomicity, consistency, 			|
+isolation, durability)								|	2)not ACID compliant
+3)transactional (commit, rollback)					|	3)non-transactional
+4)row level locking									|	4)table level locking
+5)row data stored in pages as per PK order			| 	5)no particular order
+6)supports FK and other constrtaints				| 	6)does NOT support relationship constraint
+7)NO full text search								| 	7)FULL text search  
+
+
+ACID
+1)Atomicity: Commit finish an entire operation successfully or the transaction must rollback
+2)Consistency: any change maintain data integrity or is cancelled completelly
+3)Isolation: any read or write will NOT be impacted by other reads or writes of separate transactions
+4)durability: successful commits will survive permanently
+
+---------
+int vs. varchar qual é o mais rápido
+
+int é mais rapido porque é menor em armazenamento, ams a diferença em velocidade é irirsoria se o db estiver tunado
+:
+
+	◦ int ocupam entre small 2 e big 8 bytes (64bit) , sendo 4 geralmente mais que suficiente INT sao 4bytes. signed(-2147483648 a +2147483647)
+	◦ varchar ocupam 4 bytes mais as cadeias reais .
+depende também se VARCHARs são apenas algumas pequenas palavras ou textos mais longos (quanto mais longo o varchar, mais lento)
+
+---------
+
+TASK_ID
+a principio sera uma sequence int(20) int ou int(20) tanto faz vai armazenar 4 bytes 
+
+TASK_ID MMYY999999
+
+select ifnull(lpad(max(pid)+1,9, '0'), concat(DATE_FORMAT(CURDATE(), '%y%m'),lpad('1',5,'0'))) pid from patient_admission where id_generator = (select DATE_FORMAT(CURDATE(), '%y%m') id_generator)
+
+------AUTO INCREMENT
+ALTER TABLE TASK_ASSIGNEE AUTO_INCREMENT=1001;
+
+## NO INSERT COLOCAR NULL QUE FAZ O AUTO INCREMENT
+
+--------
+
+deletar por data
+
+To delete records from a table that have a datetime value in Date_column older than 30 days use this query:
+
+USE Database_name;
+DELETE FROM Table_name
+WHERE Date_column < GETDATE() - 30
+...or this:
+
+USE Database_name;
+DELETE FROM Table_name
+WHERE Date_column < DATEADD(dd,-30,GETDATE())
+To delete records from a table that have a datetime value in Date_column older than 12 hours:
+
+USE Database_name;
+DELETE FROM Table_name
+WHERE Date_column < DATEADD(hh,-12,GETDATE())
+To delete records from a table that have a datetime value in Date_column older than 15 minutes:
+
+USE Database_name;
+DELETE FROM Table_name
+WHERE Date_column < DATEADD(mi,-15,GETDATE())
+
